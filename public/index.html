@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <title>Talk to me - Homepage</title>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+        var socket = io("http://192.168.1.6:3000");
+        var username;
+
+        // receive message from server
+        socket.on("server-sent-data", function (data) {
+            let li = document.createElement('li');
+            let b = document.createElement('b');
+            b.append(`${data.username} : `);
+            li.append(b);
+            li.append(data.message);
+            $("#chat-content").append(li);
+        });
+
+        // send message to server
+        $(document).ready(function () {
+            $("#join").click(function () {
+                let input = $('#username');
+                input.prop('disabled', true);
+                username = input.val();
+                socket.emit('hello', { username: username });
+            });
+
+            $("#send").click(function () {
+                let msg = $('#msg').val();
+                socket.emit("client-sent-data", { username: username, message: msg });
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <h1>Talk to me</h1>
+
+    <div>
+        <p>
+            <input id="username" type="text" placeholder="Enter your name...">
+            <button id="join">Join</button>
+        </p>
+        <p>
+            <input type="text" id="msg">
+            <button id="send">Send</button>
+        </p>
+        <div>
+            <ul id="chat-content" style="list-style-type: none;">
+
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>
