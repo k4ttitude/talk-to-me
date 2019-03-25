@@ -20,21 +20,21 @@ io.on('connection', socket => {
 
     socket.on('hello', data => {
         console.dir(data);
-        socket.emit('server-sent-data', { username: 'Server', message: `Welcome, ${data.username}` });
-        socket.broadcast.emit('server-sent-data', {
+        socket.emit('server-message', { username: 'Server', message: `Welcome, ${data.username}` });
+        socket.broadcast.emit('server-message', {
             username: 'Server',
             message: `${data.username} has joined channel.`
         });
     });
 
     socket.on('client-sent-data', data => {
-        // socket.broadcast.emit('server-sent-data', { username: data.username, message: data.message });
-        io.emit('server-sent-data', { username: data.username, message: data.message });
+        // socket.broadcast.emit('message', { username: data.username, message: data.message });
+        io.emit('message', { username: data.username, message: data.message });
     });
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(`${__dirname}/html/index.html`);
+    res.sendFile(`${__dirname}/public/index.html`);
 })
 
 app.post('/register', (req, res) => {

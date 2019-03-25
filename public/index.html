@@ -10,12 +10,20 @@
         var username;
 
         // receive message from server
-        socket.on("server-sent-data", function (data) {
+        socket.on("message", function (data) {
             let li = document.createElement('li');
             let b = document.createElement('b');
-            b.append(`${data.username} : `);
+            b.append(`${data.username}: `);
             li.append(b);
             li.append(data.message);
+            $("#chat-content").append(li);
+        });
+
+        socket.on('server-message', data => {
+            let li = document.createElement('li');
+            let b = document.createElement('b');
+            b.append(data.message);
+            li.append(b);
             $("#chat-content").append(li);
         });
 
